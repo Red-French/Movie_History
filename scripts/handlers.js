@@ -192,10 +192,25 @@ define(function (require) {
 
 	$(document).on("click", ".movie-poster", function(event) {
 		console.log("you clicked a movie poster");
+		// may need a "display modal call"
 
-		require(["hbs!../templates/find_results"], function(resultsTemplate) {
-			$("#movie-catcher").html(resultsTemplate(OMDBSearchResults));
+		var movieInfo = {};
+		console.log(event.target);
+		
+
+		// movieInfo.Title = event.target.something something something.attr("alt");
+		movieInfo.Title = $(event.target.parentElement.firstElementChild.firstElementChild).attr("src");
+
+		// movieInfo.Year = event.target.something something something.attr("year");
+		// movieInfo.Actors = GET INFO FROM DOM
+		
+		console.log("movieInfo",movieInfo);
+
+		require(["hbs!../templates/posterModal"], function(poster) {
+			$("#modal").html(poster(movieInfo));
 		});
 	});
+
+	//may need a close modal button click handler
 
 });
