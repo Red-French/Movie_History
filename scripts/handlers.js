@@ -184,6 +184,18 @@ define(function (require) {
 
 	$(document).on("click", "#btn-delete-movie", function(event) {
 		console.log("click to delete movie poster");
-	});	
+	});
+
+
+
+/********************** Movie Poster Modal click ******************/
+
+	$(document).on("click", ".movie-poster", function(event) {
+		console.log("you clicked a movie poster");
+
+		require(["hbs!../templates/find_results"], function(resultsTemplate) {
+			$("#movie-catcher").html(resultsTemplate(OMDBSearchResults));
+		});
+	});
 
 });
