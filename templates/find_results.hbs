@@ -4,10 +4,11 @@
     {{#each Search}} 
       <div class="col-md-3">
         <div class="movie">
-          <img class="movie-poster movieInfo" src="{{Poster}}" alt="{{Title}}" year="{{Year}}">
+          {{!-- <img class="movie-poster movieInfo" src="{{Poster}}" alt="{{Title}}" year="{{Year}}"> --}}
+          <img src="http://img.omdbapi.com/?i={{imdbID}}&apikey=7c212437" class="movieCast" alt="{{Title}}" data-toggle="modal" data-target="#movieInfoModal" id="{{imdbID}}">
           <button id="btn-delete-movie" class="glyphicon glyphicon-remove-circle"></button>
         </div>
-        <button class="btn-add-movie" type="button">Add</button>
+        <button class="btn-add-movie" type="button" imdb="{{imdbID}}">Add</button>
       </div>
     {{/each}}
   </div>

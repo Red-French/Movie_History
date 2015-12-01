@@ -144,7 +144,8 @@ define(function (require) {
 	});
 
 /************************* ADD btn click *************************/
-	$(document).on("click", ".btn-add-movie", function(event) {
+	$(document).on("click", ".btn-add-movie", function(event, imdbID) {
+
 		// create movie data object from OMDB info stored on DOM: MVP needs actors, year, title, and poster
 		console.log("event.target", $(event.target));
 		var moviePoster = $(event.target.parentElement.firstElementChild.firstElementChild).attr("src");
@@ -158,6 +159,22 @@ define(function (require) {
 			"Year": movieYear,
 			"Actors": movieActors
 		};
+
+		imdbID = $(this).attr("imdb");  // grab omdbID 
+		console.log("imdbID", imdbID);
+
+		// get movie attributes from OMDb
+	    $.ajax({ url: "http://www.omdbapi.com/?i=" + imdbID + "&type=movie",
+	      method: "GET"
+	    })
+	      .done(function(json_data) {
+	        console.log("omdb json_data", json_data);
+	      });
+
+
+
+
+
 
 		// store any movie any user adds to a global movies location in firebase
 		var moviesRef = new Firebase("https://movieshistory.firebaseio.com/movies");
