@@ -190,6 +190,7 @@ define(function (require) {
 
 /********************** Movie Poster Modal click ******************/
 
+
 	$(document).on("click", ".movieInfo", function(event) {
 		console.log("you clicked a movie poster");
 		// may need a "display modal call"
@@ -208,9 +209,6 @@ define(function (require) {
 
 		require(["hbs!../templates/posterModal"], function(poster) {
 			$(".movieInfo").html(poster(movieInfo));
-		});
-	});
 
-	//may need a close modal button click handler
 
 });
