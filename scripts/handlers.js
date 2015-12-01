@@ -107,36 +107,37 @@ define(function (require) {
 			// search OMDB for movies matching title
 			findMovies.searchOMDBMovies(userInput)
 				.then(function(OMDBSearchResults) {
-		        		searchResults = OMDBSearchResults;
-					findMovies.getAllUserMovies()
-						.then(function( userMoviesToSearch ) {
+					console.log("OMDBSearchResults",OMDBSearchResults);
+		   //      		searchResults = OMDBSearchResults;
+					// findMovies.getAllUserMovies()
+					// 	.then(function( userMoviesToSearch ) {
 						
-						// at this point, shoudl have OMDB results in searchResults and firebase movies in userMoviesToSearch
-		        			console.log("OMDB Search Results", searchResults);
-						console.log("userMoviesToSearch", userMoviesToSearch);
+					// 	// at this point, shoudl have OMDB results in searchResults and firebase movies in userMoviesToSearch
+		   //      			console.log("OMDB Search Results", searchResults);
+					// 	console.log("userMoviesToSearch", userMoviesToSearch);
 
-						// push firebase user movies with matching title to OMDB Search array
-						for (var movie in userMoviesToSearch) {
-							console.log("movie", userMoviesToSearch[movie].Title);
-							var movieTitle = userMoviesToSearch[movie].Title.toLowerCase();
-							var userTitleSearch = userInput.toLowerCase();
-							if (movieTitle === userTitleSearch) {
-							 	searchResults.Search.push(userMoviesToSearch[movie]);
-							} // END if
-						} // END for-in loop
-						console.log("searchResults",searchResults);
-						// ***Pass results to HBS template (consider returning movies as object and passing to HBS outside of method?)
-			        		require(["hbs!../templates/find_results"], function(resultsTemplate) {
-			      			$("#movie-catcher").html(resultsTemplate(searchResults));
-				  		});
+					// 	// push firebase user movies with matching title to OMDB Search array
+					// 	for (var movie in userMoviesToSearch) {
+					// 		console.log("movie", userMoviesToSearch[movie].Title);
+					// 		var movieTitle = userMoviesToSearch[movie].Title.toLowerCase();
+					// 		var userTitleSearch = userInput.toLowerCase();
+					// 		if (movieTitle === userTitleSearch) {
+					// 		 	searchResults.Search.push(userMoviesToSearch[movie]);
+					// 		} // END if
+					// 	} // END for-in loop
+					// 	console.log("searchResults",searchResults);
+					// 	// ***Pass results to HBS template (consider returning movies as object and passing to HBS outside of method?)
 			        		
-						})
-						.fail(function(error) {
-							console.log("error", error);
-						});
+					// 	})
+					// 	.fail(function(error) {
+					// 		console.log("error", error);
+					// 	});
 
 					// JOIN SEARCH RESULTS AND PASS TO HBS
 
+		    		require(["hbs!../templates/find_results"], function(resultsTemplate) {
+			   			$("#movie-catcher").html(resultsTemplate(OMDBSearchResults));
+				 	});
 				})
 				.done();
 		}
@@ -209,6 +210,6 @@ define(function (require) {
 
 		require(["hbs!../templates/posterModal"], function(poster) {
 			$(".movieInfo").html(poster(movieInfo));
-
-
+		});
+	});
 });

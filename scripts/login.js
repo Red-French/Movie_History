@@ -68,7 +68,7 @@ define(["firebase","templates","findMovies"], function (Firebase, templates, fin
 					$("#error").html("Authenticated successfully.", error);
 					// direct user to initial_page after successful login
 					templates.loadInitialPage();
-					findMovies.getAllUserMovies();
+					//findMovies.getAllUserMovies();
 				} // end else
 			}); // end onComplete callback for ref.authWithPassword
 		}, // end loginUser

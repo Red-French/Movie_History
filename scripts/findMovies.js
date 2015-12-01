@@ -21,8 +21,8 @@ return {
       // ***submit GET request to OMDB
       $.ajax({url: "http://www.omdbapi.com/?s=" + searchInput + "&r=json"
       }).done( function(searchResults) {
-        // console.log("inside findMovies done");
-        // console.log("movies = ", searchResults);
+        console.log("inside findMovies done");
+        console.log("movies = ", searchResults);
         deferred.resolve(searchResults);
       });
       return deferred.promise;
@@ -44,6 +44,7 @@ return {
           // ***add rating as key/value pair to tempUserMovieData[movieRef]
           // console.log("childSnapshot key", childSnapshot.key());
           // console.log("childSnapshot val", childSnapshot.val());
+
           tempUserMovieData[childSnapshot.key()] = {"Rating" : childSnapshot.val()};
           // console.log("tempUserMovieData", tempUserMovieData);
           
@@ -53,7 +54,7 @@ return {
           
           // ***get snapshot of movies/movieRef data
           movieRef.once("value", function(snapshot) {  
-            
+            console.log(snapshot);
             // ***set data at movie location as key/value pair of userMovieData[movieRef]
             userMovieData[snapshot.key()] = snapshot.val();
 
