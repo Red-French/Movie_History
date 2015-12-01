@@ -3,6 +3,10 @@ define(function (require) {
 	var $ = require("jquery");
 	var login = require("login");
 	var findMovies = require("findMovies");
+	var moviesRef = new Firebase ("https://movieshistory.firebaseio.com/movies/");
+	var authData = moviesRef.getAuth();
+	var userUID = authData.uid;
+
 	
 /**************** LOGIN / LOGOUT *******************/
 	// attach click handler to register button
@@ -27,70 +31,72 @@ define(function (require) {
 	// attach click handler to 'all' link
 	$(document).on("click","#link-all", function(event) {
 		console.log("Filtering 'ALL' users movies");
+		
 		$("#instructions").remove();
-		findMovies.getAllUserMovies()
-			.then(function(userMovieData) {
-			console.log("userMovies", userMovieData);
+
+		moviesRef.orderByChild("User").equalTo(userUID).on("value", function(snapshot) {
+			console.log("snapshot",snapshot.val());
 			require(["hbs!../templates/filter_results"], function(resultsTemplate) {
-				$("#movie-catcher").html(resultsTemplate(userMovieData));
+				$("#movie-catcher").html(resultsTemplate(snapshot.val()));
 			});
 		});
+	
 	});
+
 	// attach click handler to 'watched' link
 	$(document).on("click","#link-watched", function(event) {
 		console.log("Filtering 'WATCHED' users movies");
+		
 		$("#instructions").remove();
+		var userMovies = {};
 		var watchedMovies = {};
-		findMovies.getAllUserMovies()
-			.then(function(userMovieData) {
-				for (var movieRefKey in userMovieData) {
-					if (userMovieData[movieRefKey].Rating !== "unwatched") {
-						watchedMovies[movieRefKey] = userMovieData[movieRefKey];
-					}
+
+		moviesRef.orderByChild("User").equalTo(userUID).on("value", function(snapshot) {
+			userMovies = snapshot.val();
+
+			for (var movieKey in userMovies) {
+				// check for Rating of unwatched
+				if (userMovies[movieKey].Rating !== 0) {
+					watchedMovies[movieKey] = userMovies[movieKey];
 				}
-				console.log("watched movies", watchedMovies);
-				require(["hbs!../templates/filter_results"], function(resultsTemplate) {
-					$("#movie-catcher").html(resultsTemplate(watchedMovies));
-				});
+			}
+			// console.log("watchedMovies", watchedMovies);
+			// pass watched movies to HBS template
+			require(["hbs!../templates/filter_results"], function(resultsTemplate) {
+				$("#movie-catcher").html(resultsTemplate(watchedMovies));
 			});
+		
+		});
+	
 	});
+
 	// attach click handler to 'unwatched' link
 	$(document).on("click","#link-unwatched", function(event) {
 		console.log("Filtering 'UNWATCHED' users movies");
 		$("#instructions").remove();
+		var userMovies = {};
 		var unwatchedMovies = {};
-		findMovies.getAllUserMovies()
-			.then(function(userMovieData) {
-				var movies = userMovieData;
-				for (var movieRefKey in movies) {
-					if (movies[movieRefKey].Rating === "unwatched") {
-						unwatchedMovies[movieRefKey] = movies[movieRefKey];
-					}
+
+		moviesRef.orderByChild("User").equalTo(userUID).on("value", function(snapshot) {
+			userMovies = snapshot.val();
+
+			for (var movieKey in userMovies) {
+				// check for Rating of unwatched
+				if (userMovies[movieKey].Rating === 0) {
+					unwatchedMovies[movieKey] = userMovies[movieKey];
 				}
-				console.log("unwatchedMovies",unwatchedMovies);
-				require(["hbs!../templates/filter_results"], function(resultsTemplate) {
-					$("#movie-catcher").html(resultsTemplate(unwatchedMovies));
-				});
+			}
+			// console.log("watchedMovies", watchedMovies);
+			// pass watched movies to HBS template
+			require(["hbs!../templates/filter_results"], function(resultsTemplate) {
+				$("#movie-catcher").html(resultsTemplate(unwatchedMovies));
 			});
+		
+		});
 	});
 	// attach click handler to 'favorites' link
 	$(document).on("click","#link-favorites", function(event) {
 		console.log("Filtering 'FAVORITES' users movies");
-		$("#instructions").remove();
-		var favoriteMovies = {};
-		findMovies.getAllUserMovies()
-			.then(function(userMovieData) {
-				var movies = userMovieData;
-				for (var movieRefKey in movies) {
-					if (movies[movieRefKey].Rating === 5) {
-						favoriteMovies[movieRefKey] = movies[movieRefKey];
-					}
-				}
-				console.log("favorite movies", favoriteMovies);
-				require(["hbs!../templates/filter_results"], function(resultsTemplate) {
-					$("#movie-catcher").html(resultsTemplate(favoriteMovies));
-				});
-			});
 	});
 
 /****************** SEARCH **************************/
@@ -99,44 +105,22 @@ define(function (require) {
 		// console.log("keypress detected: ", event.which);
 		if (event.which === 13)
 		{
+			// Remove instructions
 			$("#instructions").remove();
 			var userInput = $("#search-movies").val();
+			
+			// query OMDB API
 			$("#search-movies").val("");
-			console.log("user search input = ", userInput);
-			var searchResults = {};
 			// search OMDB for movies matching title
-			findMovies.searchOMDBMovies(userInput)
+			findMovies.findOMDBMovies(userInput)
 				.then(function(OMDBSearchResults) {
-		        		searchResults = OMDBSearchResults;
-		        			console.log("Search Results", searchResults);
-					findMovies.getAllUserMovies()
-						.then(function( userMoviesToSearch ) {
-						console.log("userMoviesToSearch", userMoviesToSearch);
-						
-						// at this point, shoudl have OMDB results in searchResults and firebase movies in userMoviesToSearch
-
-						// push firebase user movies with matching title to OMDB Search array
-						for (var movie in userMoviesToSearch) {
-							console.log("movie", userMoviesToSearch[movie].Title);
-							var movieTitle = userMoviesToSearch[movie].Title.toLowerCase();
-							var userTitleSearch = userInput.toLowerCase();
-							if (movieTitle === userTitleSearch) {
-							 	searchResults.Search.push(userMoviesToSearch[movie]);
-							} // END if
-						} // END for-in loop
-						console.log("searchResults",searchResults);
-						// ***Pass results to HBS template (consider returning movies as object and passing to HBS outside of method?)
-			        		require(["hbs!../templates/find_results"], function(resultsTemplate) {
-			      			$("#movie-catcher").html(resultsTemplate(OMDBSearchResults));
-				  		});
-			        		
-						})
-						.fail(function(error) {
-							console.log("error", error);
-						});
-
-					// JOIN SEARCH RESULTS AND PASS TO HBS
-
+					
+		        		require(["hbs!../templates/find_results"], function(resultsTemplate) {
+		      			$("#movie-catcher").html(resultsTemplate(OMDBSearchResults));
+			  		});
+				})
+				.fail(function(error) {
+					console.log("error", error);
 				})
 				.done();
 		}
@@ -144,67 +128,43 @@ define(function (require) {
 
 /************************* ADD btn click *************************/
 	$(document).on("click", ".btn-add-movie", function(event) {
-		// create movie data object from OMDB info stored on DOM: MVP needs actors, year, title, and poster
-		console.log("event.target", $(event.target));
-		var moviePoster = $(event.target.parentElement.firstElementChild.firstElementChild).attr("src");
-		var movieTitle = $(event.target.parentElement.firstElementChild.firstElementChild).attr("alt");
-		var movieActors = "actors"; // how do we get the actors?
-		var movieYear = $(event.target.parentElement.firstElementChild.firstElementChild).attr("year"); // currently stored in HBS template on DOM
-
-		var movieData = {
-			"Poster": moviePoster,
-			"Title": movieTitle,
-			"Year": movieYear,
-			"Actors": movieActors
-		};
-
-		// store any movie any user adds to a global movies location in firebase
-		var moviesRef = new Firebase("https://movieshistory.firebaseio.com/movies");
-		// store the returned UID from firebase push to pass to users library of unwatched movies with rating "unwatched"
-		// movieRef stores a reference to the path of where we are pushing our data....which is firebase/movies
-		// when you use push, Firebase creates a unique id
-		var movieRef = moviesRef.push(movieData);
-		movieRef = movieRef.toString().split("movies/")[1];
-		console.log("movieRef", movieRef);
-
-		// get current auth user ID and store movie under user firebase location
-		var authData = moviesRef.getAuth();
-		var userRef = new Firebase("https://movieshistory.firebaseio.com/users/" + authData.uid);
-		userRef.child(movieRef).set("unwatched");
+		var imdbID = $(this).attr("imdbID");
+		
+		// when user adds movie, get additional info from OMDB
+		findMovies.getMoreInfo(imdbID)
+			.then(function(movieInfo) {
+				console.log("moreInfo", movieInfo);
+				var movieData = {
+					"Poster": movieInfo.Poster,
+					"Title": movieInfo.Title,
+					"Year": movieInfo.Year,
+					"Actors": movieInfo.Actors,
+					"Rating": 0,
+					"Stars": 0,
+					"User": authData.uid
+				};
+				
+				moviesRef.push(movieData);
+			})
+			.fail(function(error) {
+				console.log("error", error);
+			})
+			.done();
 	});
 
 /*********************** Watched btn movie handler ************************/
 	$(document).on("click",".btn-watched-movie", function(event) {
 		console.log("btn-watched-movie clicked");
-		var movieKey = $(event.target.parentElement.firstElementChild.firstElementChild).attr("id");
-		console.log("event", movieKey);
-		var appRef = new Firebase("https://movieshistory.firebaseio.com/");
-		var authData = appRef.getAuth();
-		// create reference to user movie in firebase
-		var userRef = new Firebase("https://movieshistory.firebaseio.com/users/" + authData.uid);
-		userRef.child(movieKey).set(0);
 	});
 
 /********************** Delete Movie click ********************/
 
 	$(document).on("click", "#btn-delete-movie", function(event) {
-		// console.log("click to delete movie poster");
-		// console.log(event.target.parentElement.parentElement);
-		
 		// remove movie poster and info from DOM
 		$(event.target.parentElement.parentElement.remove());
-		// get movie id from DOM
-		var movieToDelete = event.target.parentElement.firstElementChild;
-		movieToDelete = $(movieToDelete).attr('id');
-		// console.log("movieToDelete", movieToDelete);
 
+		// make firebase location unavailable HERE
 
-		var appRef = new Firebase("https://movieshistory.firebaseio.com/");
-		var authData = appRef.getAuth();
-		// create reference to user movie in firebase
-		var movieToDeleteRef = new Firebase("https://movieshistory.firebaseio.com/users/" + authData.uid + "/" + movieToDelete);
-		// remove movie ref from user in firebase
-		movieToDeleteRef.remove();
 	});	
 
 });
