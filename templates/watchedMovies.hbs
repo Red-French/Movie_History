@@ -1,0 +1,19 @@
+<div class="container">
+  <div class="row">
+    {{#each this}} 
+      <div class="col-md-3">
+        <div class="movie">
+          <img class="movie-poster" src="{{Poster}}" alt="{{Title}}" year="{{Year}}" id="{{@key}}">
+          <button id="btn-delete-movie" class="glyphicon glyphicon-remove-circle"></button>
+        </div>
+
+        <button class="btn-watched-movie" type="button">{{Rating}}</button>
+        
+        <!-- star ratings -->
+        <!-- <input class="rating" data-min="0" data-max="5" data-step="1"> -->
+        
+
+      </div>
+    {{/each}}
+  </div>
+</div>

@@ -29,41 +29,58 @@ return {
     },
 
 
+    getMovieData: function (movieKey) {
+      console.log("in getMovieData");
+      var deferred = Q.defer();
+      var movieData = {};
+      // ***create reference to firebase movies/movieRef location
+      var movieURL = "https://movieshistory.firebaseio.com/movies/"+movieKey;
+      $.ajax({
+        method: "GET",
+        url: "https://movieshistory.firebaseio.com/movies/"+movieKey,
+        dataType: "JSON"
+        })
+        .fail(function(error) {
+          console.log("getMovieData Error", error);
+          deferred.reject(error);
+        })
+        .done(function(movieData) {
+          // callback when getting movie data 
+          console.log("movieData",movieData);
+          deferred.resolve(movieData);
+        });
+      return deferred.promise;
+      }, // END getMovieData
+
 
     /*************** getAllUserMovies ***********/
     getAllUserMovies: function () {
-      console.log("in getAllUserMovies");
+      console.log( "in getAllUserMovies" );
       var deferred = Q.defer();
       var userMovieData = {};
       var tempUserMovieData = {};
-      console.log("userDataRef",userDataRef.toString());
-      userDataRef.once("value", function(snapshot) {
-        console.log("snapshot",snapshot.val());
-        // ***The callback function will only get called once since we return true
+      
+      userDataRef.once( "value", function( snapshot ) {
         // ***get movieRef keys to get data from firebase/movies location
-        snapshot.forEach(function(childSnapshot) {
+        snapshot.forEach( function( childSnapshot ) {
+          console.log( "childSnapshot",childSnapshot.val() ); 
+          deferred.resolve(childSnapshot);
+
 
           // ***add rating as key/value pair to tempUserMovieData[movieRef]
-          // console.log("childSnapshot key", childSnapshot.key());
-          // console.log("childSnapshot val", childSnapshot.val());
-          tempUserMovieData[childSnapshot.key()] = {"Rating" : childSnapshot.val()};
-          console.log("tempUserMovieData", tempUserMovieData);
+          // tempUserMovieData[childSnapshot.key()] = {"Rating" : childSnapshot.val()};
+          // console.log("tempUserMovieData", tempUserMovieData);
           
-          // ******PUT IN METHOD called: getMovieData(movieKey): function() {};
-          // ***create reference to firebase movies/movieRef location
-          var movieRef = new Firebase("https://movieshistory.firebaseio.com/movies/"+childSnapshot.key());
-          
-          // ***get snapshot of movies/movieRef data
-          movieRef.once("value", function(snapshot) {  
-            
-            // ***set data at movie location as key/value pair of userMovieData[movieRef]
-            userMovieData[snapshot.key()] = snapshot.val();
 
-            // ***combine temp object with user data to 
-            userMovieData[snapshot.key()].Rating = tempUserMovieData[snapshot.key()].Rating;
-            console.log("userMovieData", userMovieData);
-            deferred.resolve(userMovieData);
-          }); // end movieRef.once callback
+          // movieRef.once("value", function(snapshot) {  
+            
+          //   // ***set data at movie location as key/value pair of userMovieData[movieRef]
+          //   userMovieData[snapshot.key()] = snapshot.val();
+
+          //   // ***combine temp object with user data to 
+          //   userMovieData[snapshot.key()].Rating = tempUserMovieData[snapshot.key()].Rating;
+            //deferred.resolve(userMovieData);
+          // }); // end movieRef.once callback
         }); // end snapshot.forEach callback
       }); // end userDataRef.once callback
     return deferred.promise;

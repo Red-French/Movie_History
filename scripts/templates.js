@@ -10,8 +10,6 @@ define(function (require) {
 			require(["hbs!../templates/initial_page"], function (throwInitialPage) {
 				$("#catcher").html(throwInitialPage);
 			});
-		}
-
-		
+		}	
 	};
 });
