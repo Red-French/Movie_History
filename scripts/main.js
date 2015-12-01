@@ -18,8 +18,16 @@ requirejs.config({
 	}
 });
 
-require(["dependencies", "login", "handlers"], function(_$_, login, handlers) {
+require(["dependencies"], function(_$_) {
 	console.log("Hello from main.js");
+
+/*********** HBS Helpers **************/
+	hbs.registerHelper("times", function(n, block) {
+	    var accum = "";
+	    for(var i = 0; i < n; ++i)
+	        accum += block.fn(i);
+	    return accum;
+	});
 
 
 });
