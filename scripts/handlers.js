@@ -136,6 +136,7 @@ define(function (require) {
 					// JOIN SEARCH RESULTS AND PASS TO HBS
 
 		    		require(["hbs!../templates/find_results"], function(resultsTemplate) {
+		    			// console.log(OMDBSearchResults);
 			   			$("#movie-catcher").html(resultsTemplate(OMDBSearchResults));
 				 	});
 				})
@@ -208,8 +209,8 @@ define(function (require) {
 		
 		// console.log("movieInfo",movieInfo);
 
-		require(["hbs!../templates/posterModal"], function(poster) {
-			$(".movieInfo").html(poster(movieInfo));
-		});
+// require(["hbs!../templates/posterModal"], function(poster) {
+// 	$(".movieInfo").html(poster(movieInfo));
+		//});
 	});
 });

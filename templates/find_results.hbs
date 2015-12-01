@@ -1,5 +1,5 @@
 <!-- PUT OMDB MOVIE POSTER AND MOVIE INFO HERE -->
-<div class="container">
+{{!-- <div class="container">
   <div class="row">
     {{#each Search}} 
       <div class="col-md-3">
@@ -11,4 +11,43 @@
       </div>
     {{/each}}
   </div>
+</div> --}}
+
+<div class="container">
+  <div class="row">
+      <div class="col-md-1"> 
+  {{#each Search}}
+
+
+
+    <button data-toggle="modal" data-target="#uniqMovieId">
+      <p>{{Title}}</p>
+        <div class="movie">
+          <img class="movie-poster movieInfo" src="{{Poster}}" alt="{{Title}}" year="{{Year}}">
+          <button id="btn-delete-movie" class="glyphicon glyphicon-remove-circle"></button>
+        </div>
+        <button class="btn-add-movie" type="button">Add</button>
+      </div>
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="uniqMovieId" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">{{title}}</h4>
+          </div>
+          <div class="modal-body">
+            ...
+          </div>
+          
+        </div>
+      </div>
+  {{/each}}
+    </div>
+  </div>
 </div>
+
+
+    
