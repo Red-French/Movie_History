@@ -190,24 +190,24 @@ define(function (require) {
 
 /********************** Movie Poster Modal click ******************/
 
-	$(document).on("click", ".movie-poster", function(event) {
+	$(document).on("click", ".movieInfo", function(event) {
 		console.log("you clicked a movie poster");
 		// may need a "display modal call"
 
-		var movieInfo = {};
-		console.log(event.target);
+		// var movieInfo = {};
+		// console.log(event.target);
 		
 
-		// movieInfo.Title = event.target.something something something.attr("alt");
-		movieInfo.Title = $(event.target.parentElement.firstElementChild.firstElementChild).attr("src");
+		// // movieInfo.Title = event.target.something something something.attr("alt");
+		// movieInfo.Title = $(event.target.parentElement.firstElementChild.firstElementChild).attr("src");
 
-		// movieInfo.Year = event.target.something something something.attr("year");
-		// movieInfo.Actors = GET INFO FROM DOM
+		// // movieInfo.Year = event.target.something something something.attr("year");
+		// // movieInfo.Actors = GET INFO FROM DOM
 		
-		console.log("movieInfo",movieInfo);
+		// console.log("movieInfo",movieInfo);
 
 		require(["hbs!../templates/posterModal"], function(poster) {
-			$("#modal").html(poster(movieInfo));
+			$(".movieInfo").html(poster(movieInfo));
 		});
 	});
 
