@@ -21,8 +21,9 @@
               </div>
             {{/times}}
             </div>
-          {{else}}
+          {{#else}}
           <button class="btn btn-primary btn-watched-movie" type="button" firebase-key="{{@key}}">Watched</button>
+          {{/else}}
         {{/if}}
 
       </div>
