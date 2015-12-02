@@ -18,16 +18,17 @@ requirejs.config({
 	}
 });
 
-require(["dependencies"], function(_$_) {
+require(["dependencies","hbs/handlebars"], function(_$_, hbsFull) {
 	console.log("Hello from main.js");
 
 /*********** HBS Helpers **************/
-	hbs.registerHelper("times", function(n, block) {
+	hbsFull.registerHelper("times", function(n, block) {
 	    var accum = "";
 	    for(var i = 0; i < n; ++i)
 	        accum += block.fn(i);
 	    return accum;
 	});
+
 
 
 });

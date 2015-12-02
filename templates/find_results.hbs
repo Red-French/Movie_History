@@ -3,9 +3,10 @@
   <div class="row">
     {{#each Search}} 
       <div class="col-md-3">
-        <div class="movie">
-          <img class="movie-poster" src="{{Poster}}" alt="{{Title}}">
-          <button id="btn-delete-movie" class="glyphicon glyphicon-remove-circle"></button>
+        <div class="OMDBmovie">
+          
+            <img class="movie-poster" src="{{Poster}}" alt="{{Title}}" imdbID="{{imdbID}}" data-toggle="modal" data-target="#movie-modal">
+          
         </div>
         <button class="btn-add-movie" type="button" imdbID="{{imdbID}}">Add</button>
       </div>

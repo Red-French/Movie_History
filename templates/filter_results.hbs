@@ -1,23 +1,30 @@
 <!-- PUT OMDB MOVIE POSTER AND MOVIE INFO HERE -->
 <div class="container">
-  <div class="row">
+  <div class="movies-row row">
     {{#each this}} 
       <div class="col-md-3">
-        <div class="movie">
-          <img class="movie-poster" src="{{Poster}}" alt="{{Title}}">
+        <div class="movie" data-toggle="modal" data-target="#movie-modal">
+          <img class="movie-poster" src="{{Poster}}" alt="{{Title}}" imdbID="{{imdbID}}" data-toggle="modal" data-target="#movie-modal">
           <button id="btn-delete-movie" class="glyphicon glyphicon-remove-circle"></button>
         </div>
+        <div class="stars-container" data-toggle="modal" data-target="#stars-modal">
+          {{#if Rating}}
+            {{#times Stars}}
+              <div class="starz" stars="{{Stars}}">
+                  <img src='data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IiB3aWR0aD0iMjBweCIgaGVpZ2h0PSIyMHB4IiB2aWV3Qm94PSIwIDAgMjAgMjAiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDIwIDIwIiB4bWw6c3BhY2U9InByZXNlcnZlIj48cG9seWdvbiBmaWxsPSIjRkZERjg4IiBwb2ludHM9IjEwLDAgMTMuMDksNi41ODMgMjAsNy42MzkgMTUsMTIuNzY0IDE2LjE4LDIwIDEwLDE2LjU4MyAzLjgyLDIwIDUsMTIuNzY0IDAsNy42MzkgNi45MSw2LjU4MyAiLz48L3N2Zz4='>
+              </div>
+            {{/times}}
 
-        {{#if Rating}}
-          <button class="btn-watched-movie" type="button">Watched</button>
-
+            {{#times Stars-blank}}
+              <div class="starz" blank-stars="{{Stars-blank}}">
+                  <img src='data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IiB3aWR0aD0iMjBweCIgaGVpZ2h0PSIyMHB4IiB2aWV3Qm94PSIwIDAgMjAgMjAiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDIwIDIwIiB4bWw6c3BhY2U9InByZXNlcnZlIj48cG9seWdvbiBmaWxsPSIjREREREREIiBwb2ludHM9IjEwLDAgMTMuMDksNi41ODMgMjAsNy42MzkgMTUsMTIuNzY0IDE2LjE4LDIwIDEwLDE2LjU4MyAzLjgyLDIwIDUsMTIuNzY0IDAsNy42MzkgNi45MSw2LjU4MyAiLz48L3N2Zz4='>
+              </div>
+            {{/times}}
+          </div>
           {{else}}
-            <div class="starz">
-              {{#times Stars}}
-                <img src='data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IiB3aWR0aD0iMjBweCIgaGVpZ2h0PSIyMHB4IiB2aWV3Qm94PSIwIDAgMjAgMjAiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDIwIDIwIiB4bWw6c3BhY2U9InByZXNlcnZlIj48cG9seWdvbiBmaWxsPSIjRkZERjg4IiBwb2ludHM9IjEwLDAgMTMuMDksNi41ODMgMjAsNy42MzkgMTUsMTIuNzY0IDE2LjE4LDIwIDEwLDE2LjU4MyAzLjgyLDIwIDUsMTIuNzY0IDAsNy42MzkgNi45MSw2LjU4MyAiLz48L3N2Zz4='>
-              {{/times}}
-            </div>
+          <button class="btn btn-primary btn-watched-movie" type="button">Watched</button>
         {{/if}}
+
       </div>
     {{/each}}
   </div>

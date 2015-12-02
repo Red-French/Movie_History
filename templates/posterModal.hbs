@@ -1,16 +1,13 @@
-<div class="modal fade search-movies-modal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
-  <div class="modal-dialog modal-sm">
-    <div class="modal-content text-center">
-      <div class="container">
-        <div class="row">
-          {{#each movies}} 
-            <div class="col-md-3">
-              bsosntuhasoenuhanoeuhan
-            </div>
-          {{/each}}
-        </div>
-      </div>
-    </div>
-  </div>
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <h4 class="modal-title">{{Title}} ({{Year}})</h4>
 </div>
-      
+
+<div class="modal-body">
+  <!-- movie info here -->
+  <img src="{{Poster}}" alt="{{Title}}">
+  <h4>
+  <h4>Actors:</h4>
+  <p>{{Actors}}</p></br>
+  <h4>
+</div>

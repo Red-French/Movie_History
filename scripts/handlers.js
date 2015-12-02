@@ -139,11 +139,13 @@ define(function (require) {
 					"Title": movieInfo.Title,
 					"Year": movieInfo.Year,
 					"Actors": movieInfo.Actors,
+					"imdbID": movieInfo.imdbID,
 					"Rating": 0,
 					"Stars": 0,
 					"User": authData.uid
 				};
-				
+				// push movie and data to firebase
+				console.log("movieDataToAdd",movieData);
 				moviesRef.push(movieData);
 			})
 			.fail(function(error) {
@@ -153,15 +155,50 @@ define(function (require) {
 	});
 
 /*********************** Watched btn movie handler ************************/
-	$(document).on("click",".btn-watched-movie", function(event) {
+	$( document ).on( "click", ".btn-watched-movie", function(event) {
 		console.log("btn-watched-movie clicked");
+		// set value of Rating to 1
+		// Set value of Stars to 0
 	});
+
+/*********************** Stars Rating*******************************/
+	$( document ).on( "click",".starz", function( event ) {
+		console.log("star click");
+	});
+	$( document ).on( "mouseover",".starz", function( event ) {
+		console.log("hover detected");
+
+		console.log($(this).attr('src'));
+		$(this).attr("src", "");
+	});
+
+
+/*********************** Movie Poster Click Modal*******************************/
+	$( document ).on( "click",".movie-poster", function( event ) {
+		console.log("poster click");
+		var imdbID = $(this).attr("imdbID");
+		findMovies.getMoreInfo(imdbID)
+			.then( function(movieInfo) {
+				console.log("movieInfo",movieInfo);
+				require(["hbs!../templates/posterModal"], function(Template) {
+					$("#movie-modal-content").html(Template(movieInfo));
+				});
+			})
+			.fail(function(error) {
+				console.log("error", error);
+			})
+			.done();
+	});
+
+
+
+
 
 /********************** Delete Movie click ********************/
 
-	$(document).on("click", "#btn-delete-movie", function(event) {
+	$( document ).on( "click", "#btn-delete-movie", function( event ) {
 		// remove movie poster and info from DOM
-		$(event.target.parentElement.parentElement.remove());
+		$( event.target.parentElement.parentElement.remove() );
 
 		// make firebase location unavailable HERE
 
