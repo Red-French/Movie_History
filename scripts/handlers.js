@@ -176,6 +176,7 @@ define(function (require) {
 /*********************** Movie Poster Click Modal*******************************/
 	$( document ).on( "click",".movie-poster", function( event ) {
 		console.log("poster click");
+		console.log("imdbID",imdbID);
 		var imdbID = $(this).attr("imdbID");
 		findMovies.getMoreInfo(imdbID)
 			.then( function(movieInfo) {
