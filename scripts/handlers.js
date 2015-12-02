@@ -3,6 +3,7 @@ define(function (require) {
 	var $ = require("jquery");
 	var login = require("login");
 	var findMovies = require("findMovies");
+
 	var moviesRef = new Firebase ("https://movieshistory.firebaseio.com/movies/");
 	var authData = moviesRef.getAuth();
 	var userUID = authData.uid;
@@ -51,7 +52,7 @@ define(function (require) {
 		var userMovies = {};
 		var watchedMovies = {};
 
-		moviesRef.orderByChild("User").equalTo(userUID).on("value", function(snapshot) {
+		moviesRef.orderByChild("User").equalTo(userUID).once("value", function(snapshot) {
 			userMovies = snapshot.val();
 
 			for (var movieKey in userMovies) {
@@ -77,7 +78,7 @@ define(function (require) {
 		var userMovies = {};
 		var unwatchedMovies = {};
 
-		moviesRef.orderByChild("User").equalTo(userUID).on("value", function(snapshot) {
+		moviesRef.orderByChild("User").equalTo(userUID).once("value", function(snapshot) {
 			userMovies = snapshot.val();
 
 			for (var movieKey in userMovies) {
@@ -157,6 +158,12 @@ define(function (require) {
 /*********************** Watched btn movie handler ************************/
 	$( document ).on( "click", ".btn-watched-movie", function(event) {
 		console.log("btn-watched-movie clicked");
+		var movieWatchedKey = $(this).attr("firebase-key");
+		var movieWatchedRef = new Firebase( "https://movieshistory.firebaseio.com/movies/"+movieWatchedKey);
+		movieWatchedRef.child("Rating").set(1);
+		console.log("delete me", $(event.target.parentElement));
+		$( event.target.parentElement).remove();
+
 		// set value of Rating to 1
 		// Set value of Stars to 0
 	});
@@ -199,6 +206,7 @@ define(function (require) {
 
 	$( document ).on( "click", "#btn-delete-movie", function( event ) {
 		// remove movie poster and info from DOM
+		console.log($(event.target.parentElement.parentElement));
 		$( event.target.parentElement.parentElement.remove() );
 
 		// make firebase location unavailable HERE

@@ -7,11 +7,9 @@ requirejs.config({
 		"Q": "../lib/bower_components/q/q",
 		"firebase": "../lib/bower_components/firebase/firebase",
 		"bootstrap": "../lib/bower_components/bootstrap/dist/js/bootstrap.min",
-		// "bootstrap-star-rating": "../lib/bower_components/bootstrap-star-rating/js/star-rating.min"
 	},
 	shim: {
 		"bootstrap": "jquery",
-		// "bootstrap-star-rating": "jquery",
 		"firebase": {
 			exports: "Firebase"
 		}
